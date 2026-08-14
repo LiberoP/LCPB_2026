@@ -1,20 +1,14 @@
-# from ASE.py:
-# reads local OUTCAR file for analysis (see "general analysis" notebook)
 import ase.io
 from ase.io import read, write
 import numpy as np
 
 
+# reads local OUTCAR file for analysis (see "general analysis" notebook) from a certain index on
 def clean_dataset(outcar_file, destination_file, start_idx):
     try:
         atoms_list = read(outcar_file, index=":")
         atoms_list = atoms_list[start_idx:]
         print(f"Retrieved {len(atoms_list)} structures from OUTCAR.")
-
-        # # --- Add energy and forces to each Atoms object ---
-        # for atoms in atoms_list:
-        #     atoms.info["energy"] = atoms.get_potential_energy()  # total energy (eV)
-        #     atoms.arrays["forces"] = atoms.get_forces()  # (N_atoms,3) in eV/Å
 
         # usable file
         write(destination_file, atoms_list, format="extxyz")
@@ -26,20 +20,21 @@ def clean_dataset(outcar_file, destination_file, start_idx):
     return 0
 
 
-# from split.py:
-# add seed??
+# splits data in train and validation for MACE
 def split_train_valid(
-    full_cleaned_extxyz_file, destination_train_file, destination_valid_file, train_frac, seed=1
+    full_cleaned_extxyz_file,
+    destination_train_file,
+    destination_valid_file,
+    train_frac,
+    seed=1,
 ):
     traj = ase.io.read(full_cleaned_extxyz_file, index=":")
     print(f"Total frames uploaded: {len(traj)}")
 
-    #np.random.shuffle(traj)
     rng = np.random.RandomState(seed)
     indices = np.arange(len(traj))
     rng.shuffle(indices)
     traj = [traj[i] for i in indices]
-
 
     split = int(train_frac * len(traj))
     train_frames = traj[:split]

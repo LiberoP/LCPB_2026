@@ -148,3 +148,24 @@ notebook/templates/*.html
 
 # Temporary files used for testing
 tmp/
+
+# env
+.venv/
+
+# data
+DATA/
+compressed_data/
+compressed_new_data/
+new_data/
+data/
+
+# plots
+*.png
+
+# miscellaneous
+*.pdf
+anaconda_projects/
+*.txt
+*.sty
+*.tex
+*.tar.gz
